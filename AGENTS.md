@@ -86,6 +86,18 @@ one warns:
 It is line-based rather than a real parser, on purpose. A guard that becomes the
 reason a legitimate build fails is worse than one that occasionally misses.
 
+## Developing an example against the local package
+
+`"render-rust": "file:../.."` alone does not work. npm links it, but **Node
+resolves a symlinked package from its realpath**, so `require('@renderinc/sdk')`
+inside `runtime.js` is searched from the package root rather than from the
+example — and fails with `Cannot find module '@renderinc/sdk/workflows'`.
+
+The SDK is therefore a devDependency here, so `npm install` at the repo root
+makes it resolvable from both places. The published examples declare
+`render-rust: ^<version>` like any user's project would; `init` overwrites that
+line regardless.
+
 ## Changing the Rust side
 
 `examples/` are simultaneously documentation, `init` templates, and deployed

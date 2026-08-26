@@ -1,0 +1,22 @@
+[package]
+name = "tasks"
+version = "0.1.0"
+edition = "2021"
+
+# Required. Without it cargo builds an rlib, which Node cannot load, and the
+# failure looks like a missing file rather than a misconfiguration.
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+napi = "3"
+napi-derive = "3"
+
+[build-dependencies]
+napi-build = "2"
+
+[profile.release]
+# Never set panic = "abort" here. It silently defeats #[napi(catch_unwind)], so
+# a panicking task kills the whole task server -- and every concurrent run on
+# that instance -- instead of failing one run with its message.
+opt-level = 3

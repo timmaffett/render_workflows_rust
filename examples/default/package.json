@@ -1,0 +1,17 @@
+{
+  "name": "render-rust-example-default",
+  "private": true,
+  "scripts": {
+    "build": "render-rust build",
+    "start": "node index.js",
+    "dev": "render-rust dev"
+  },
+  "dependencies": {
+    "@renderinc/sdk": "^0.6.0",
+    "render-rust": "^0.1.0"
+  },
+  "renderRust": {
+    "crate": ".",
+    "out": "build/tasks.node"
+  }
+}

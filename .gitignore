@@ -1,0 +1,11 @@
+node_modules/
+*.log
+.DS_Store
+.env
+
+# Rust build output. The examples are working projects, so they accumulate all
+# of this; none of it belongs in git, and `init` filters it out of a scaffold
+# too. Cargo.lock is committed for the examples (they are applications), but a
+# scaffold gets a fresh resolve.
+target/
+build/

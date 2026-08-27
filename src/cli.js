@@ -18,9 +18,9 @@ const lint = require('./toolchain/lint');
 
 const { version } = require('../package.json');
 
-const log = (message) => console.log(`[render-workflows-rust] ${message}`);
+const log = (message) => console.log(`[render-rust] ${message}`);
 const fail = (message) => {
-  console.error(`[render-workflows-rust] ${message}`);
+  console.error(`[render-rust] ${message}`);
   process.exit(1);
 };
 
@@ -70,7 +70,7 @@ async function build(root, { force = false, rustVersion } = {}) {
   const errors = problems.filter((p) => !p.warning);
   for (const p of problems) {
     const lead = p.warning ? 'warning' : 'error';
-    console.error(`[render-workflows-rust] ${lead}: ${p.what}\n  ${p.why}\n  ${p.fix}\n`);
+    console.error(`[render-rust] ${lead}: ${p.what}\n  ${p.why}\n  ${p.fix}\n`);
   }
   if (errors.length) fail(`${errors.length} problem(s) must be fixed before building.`);
 

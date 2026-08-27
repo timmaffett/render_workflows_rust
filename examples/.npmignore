@@ -1,0 +1,14 @@
+# An example is a working project, so it accumulates build output. `files` in
+# package.json allowlists this whole directory, and npm's usual exclusion of
+# node_modules does not reach inside an allowlisted path — so without this,
+# whatever a maintainer last built here ships to every user.
+#
+# The Dart sibling has had this file since the start. This package was created
+# by mirroring that one's `files` list and not this, which is how 0.1.1 went out
+# at 111 MB carrying a compiled .node binary. tool/prepack.js is the loud
+# backstop; this is the quiet one.
+node_modules/
+build/
+target/
+Cargo.lock
+package-lock.json

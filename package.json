@@ -1,6 +1,6 @@
 {
   "name": "render-workflows-rust",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Unofficial: write Render Workflows tasks in Rust, compiled to a native Node addon. Not affiliated with or endorsed by Render.",
   "license": "MIT",
   "repository": {
@@ -34,7 +34,8 @@
     "LICENSE"
   ],
   "scripts": {
-    "test": "node --test \"test/**/*.test.js\""
+    "test": "node --test \"test/**/*.test.js\"",
+    "prepack": "node tool/prepack.js"
   },
   "peerDependencies": {
     "@renderinc/sdk": ">=0.5.0"

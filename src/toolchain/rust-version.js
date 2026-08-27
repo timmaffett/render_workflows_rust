@@ -32,6 +32,41 @@ function requestedVersion({ flag, env, config } = {}) {
   return { version: DEFAULT_RUST_VERSION, explicit: false, from: 'default' };
 }
 
+/** requestedVersion(), with the value checked before anything else sees it. */
+function requestedVersionChecked(sources) {
+  const asked = requestedVersion(sources);
+  assertSafeVersion(asked.version);
+  return asked;
+}
+
+/**
+ * Exact versions only: digits and dots, nothing else.
+ *
+ * This is a security boundary, not tidiness. `version` reaches a URL, a
+ * download path, and — worst — an `rm(..., {recursive: true})` target. A value
+ * of `../../..` resolves that target to the project root and deletes it. The
+ * value can come from RENDER_RUST_VERSION or package.json, so it is not
+ * necessarily written by the person running the build.
+ */
+const VERSION_PATTERN = /^\d+\.\d+(\.\d+)?$/;
+
+/**
+ * Throws unless `version` is an exact version or a known channel.
+ *
+ * Applied at both ends: when a request is first read, so a typo fails with a
+ * clear message, and again before the value is used to build a path, because
+ * resolveVersion() returns a string parsed out of a downloaded manifest.
+ */
+function assertSafeVersion(version) {
+  if (typeof version !== 'string' || (!isAlias(version) && !VERSION_PATTERN.test(version))) {
+    throw new Error(
+      `invalid Rust version ${JSON.stringify(version)}.\n` +
+        `  Expected an exact version like 1.98.0, or one of: ${[...CHANNELS, 'latest'].join(', ')}.`,
+    );
+  }
+  return version;
+}
+
 /** Is this a channel name rather than an exact version? */
 function isAlias(version) {
   return CHANNELS.includes(version) || version === 'latest';
@@ -54,6 +89,9 @@ async function resolveVersion(version, { log = () => {} } = {}) {
   }
   const resolved = versionFromChannel(await res.text());
   if (!resolved) throw new Error(`could not find a version in the ${channel} channel`);
+  // Parsed out of a document fetched over the network; check it like any other
+  // untrusted string before it becomes part of a path.
+  assertSafeVersion(resolved);
   log(`Rust ${channel} resolves to ${resolved}`);
   return resolved;
 }
@@ -117,6 +155,9 @@ function compareVersions(a, b) {
 
 module.exports = {
   CHANNELS,
+  VERSION_PATTERN,
+  assertSafeVersion,
+  requestedVersionChecked,
   DEFAULT_RUST_VERSION,
   DIST,
   requestedVersion,

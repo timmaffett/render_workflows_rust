@@ -74,3 +74,48 @@ test('versions sort numerically, so 1.9 is below 1.10', () => {
   const sorted = ['1.10.0', '1.9.0', '1.100.0', '1.98.0'].sort(compareVersions);
   assert.deepStrictEqual(sorted, ['1.9.0', '1.10.0', '1.98.0', '1.100.0']);
 });
+
+// --------------------------------------------------------------------------
+// A version string is a security boundary, not a formatting preference. It
+// reaches a URL, a download path, and an rm(recursive) target, and it can come
+// from RENDER_RUST_VERSION or package.json rather than from the person running
+// the build.
+// --------------------------------------------------------------------------
+
+const { assertSafeVersion, requestedVersionChecked } = require('../src/toolchain/rust-version');
+const { archiveUrl } = require('../src/toolchain/rust-toolchain');
+const path = require('node:path');
+
+test('a traversing version is refused', () => {
+  for (const bad of ['../../..', '../../../../tmp/x', '1.98.0/../../x', './x']) {
+    assert.throws(() => assertSafeVersion(bad), /invalid Rust version/, `accepted ${bad}`);
+  }
+});
+
+test('a version cannot smuggle anything into the archive URL', () => {
+  for (const bad of ['1.98.0?x=', '1.98.0#f', 'latest; rm -rf /', '//evil.example/x', '']) {
+    assert.throws(() => archiveUrl(bad, 'x86_64-unknown-linux-gnu'), /invalid Rust version/);
+  }
+});
+
+test('the traversal that would have deleted the project is unreachable', () => {
+  // Before the guard: path.join(root, 'node_modules', `.rust-unpack-${version}`)
+  // with version '../../..' resolved to `root` itself, and the next statement
+  // was rm(unpackTo, {recursive: true, force: true}).
+  const root = '/tmp/project';
+  const evil = path.join(root, 'node_modules', '.rust-unpack-../../..');
+  assert.strictEqual(evil, root, 'the traversal no longer resolves as it did');
+  assert.throws(() => assertSafeVersion('../../..'));
+});
+
+test('real versions and channels still pass', () => {
+  for (const ok of ['1.98.0', '1.98', '0.1.0', 'stable', 'beta', 'nightly', 'latest']) {
+    assert.strictEqual(assertSafeVersion(ok), ok);
+  }
+});
+
+test('a bad value is caught when the request is read, not later', () => {
+  assert.throws(() => requestedVersionChecked({ env: '../../..' }), /invalid Rust version/);
+  assert.throws(() => requestedVersionChecked({ config: 'nightly-2026-01-01' }), /invalid Rust version/);
+  assert.strictEqual(requestedVersionChecked({ flag: '1.98.0' }).version, '1.98.0');
+});

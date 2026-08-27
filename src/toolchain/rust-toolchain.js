@@ -11,7 +11,7 @@ const { Readable } = require('node:stream');
 const { pipeline } = require('node:stream/promises');
 const path = require('node:path');
 
-const { DIST, resolveVersion } = require('./rust-version');
+const { DIST, resolveVersion, assertSafeVersion } = require('./rust-version');
 
 // Inside node_modules because Render's build cache preserves that and nothing
 // else. Measured on a real deploy: a 365 MB toolchain downloads in 2s and
@@ -46,6 +46,7 @@ function hostTriple() {
 }
 
 function archiveUrl(version, triple = hostTriple()) {
+  assertSafeVersion(version);
   return `${DIST}/rust-${version}-${triple}.tar.gz`;
 }
 
@@ -107,6 +108,8 @@ async function publishedChecksum(url) {
  * roughly 30s to fetch it, so verification is effectively free.
  */
 async function fetchToolchain({ root, version, triple = hostTriple(), log = () => {} }) {
+  // Before it becomes a filename, an unpack directory, and an rm -rf target.
+  assertSafeVersion(version);
   const url = archiveUrl(version, triple);
   const dir = path.join(root, VENDOR_DIR);
   const tmp = path.join(root, 'node_modules', `.rust-${version}.tar.gz`);
@@ -132,7 +135,19 @@ async function fetchToolchain({ root, version, triple = hostTriple(), log = () =
     createWriteStream(tmp),
   );
 
-  if (expected) {
+  if (!expected) {
+    await rm(tmp, { force: true });
+    throw new Error(
+      `no published checksum for Rust ${version}, so the download was not verified.\n` +
+        '  The archive has been deleted rather than unpacked: this package downloads a\n' +
+        '  toolchain over the network and then executes it, and an unverified download\n' +
+        '  is the one thing that must not proceed quietly. A .sha256 that 404s is also\n' +
+        `  what an attacker able to block one request would arrange.\n` +
+        `  Checked: ${url}.sha256`,
+    );
+  }
+
+  {
     const actual = hash.digest('hex');
     if (actual !== expected) {
       await rm(tmp, { force: true });
@@ -144,8 +159,6 @@ async function fetchToolchain({ root, version, triple = hostTriple(), log = () =
       );
     }
     log('checksum verified');
-  } else {
-    log(`no published checksum for Rust ${version}; nothing was verified`);
   }
 
   const unpackTo = path.join(root, 'node_modules', `.rust-unpack-${version}`);

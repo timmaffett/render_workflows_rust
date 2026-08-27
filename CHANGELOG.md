@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.1.2
+
+Security and packaging fixes from an audit of this package.
+
+- **0.1.1 shipped 111 MB across 1,953 files**, against 0.1.0's 0.1 MB and 29.
+  It carried the cargo registry, the target directory, and **a compiled `.node`
+  binary built on a maintainer's laptop**. The size was how it was noticed; the
+  binary is the part that mattered. `files` allowlists `examples/`, and npm's
+  usual exclusion of `node_modules` does not reach inside an allowlisted path.
+  Fixed twice over: an `examples/.npmignore` (which the Dart sibling has always
+  had, and which this package was created without), and a `prepack` guard that
+  refuses to pack when any build artifact is present. **Prefer 0.1.2 to 0.1.1.**
+- **An unverified toolchain download is refused rather than logged.** If the
+  published `.sha256` could not be fetched, the archive was unpacked and its
+  `install.sh` executed anyway, with a note in the log. A request that 404s is
+  also what someone able to block one request would arrange. It now deletes the
+  download and fails.
+- **Version strings are validated before use.** `RENDER_RUST_VERSION` and
+  `renderRust.rustVersion` reached a URL, a download path, and an
+  `rm(recursive)` target unchecked. `../../..` resolved that target to the
+  project root, so a build would have deleted the project. Only exact versions
+  and channel names are accepted now, checked when read and again before any
+  path is built.
+
 ## 0.1.1
 
 Documentation only, and a release because npm serves a README from the archive:

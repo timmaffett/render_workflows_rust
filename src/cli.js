@@ -8,7 +8,7 @@ const path = require('node:path');
 const {
   CHANNELS,
   DEFAULT_RUST_VERSION,
-  requestedVersion,
+  requestedVersionChecked,
   listVersions,
 } = require('./toolchain/rust-version');
 const { resolveCargo, hostTriple } = require('./toolchain/rust-toolchain');
@@ -74,7 +74,7 @@ async function build(root, { force = false, rustVersion } = {}) {
   }
   if (errors.length) fail(`${errors.length} problem(s) must be fixed before building.`);
 
-  const asked = requestedVersion({
+  const asked = requestedVersionChecked({
     flag: rustVersion,
     env: process.env.RENDER_RUST_VERSION,
     config: c.rustVersion,
@@ -256,7 +256,7 @@ async function rustInfo(root, args) {
   }
 
   const c = config(root);
-  const asked = requestedVersion({
+  const asked = requestedVersionChecked({
     flag: flagValue(args, '--rust-version'),
     env: process.env.RENDER_RUST_VERSION,
     config: c.rustVersion,

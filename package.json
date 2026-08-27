@@ -1,11 +1,11 @@
 {
-  "name": "render-rust",
+  "name": "render-workflows-rust",
   "version": "0.1.0",
   "description": "Unofficial: write Render Workflows tasks in Rust, compiled to a native Node addon. Not affiliated with or endorsed by Render.",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/timmaffett/render_rust_workflows.git"
+    "url": "git+https://github.com/timmaffett/render_workflows_rust.git"
   },
   "keywords": [
     "render",
@@ -15,6 +15,7 @@
     "node-api"
   ],
   "bin": {
+    "render-workflows-rust": "src/cli.js",
     "render-rust": "src/cli.js"
   },
   "main": "src/runtime.js",

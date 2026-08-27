@@ -8,7 +8,7 @@ const { fingerprint } = require('../src/toolchain/addon');
 const lint = require('../src/toolchain/lint');
 
 function crate(files) {
-  const root = mkdtempSync(path.join(os.tmpdir(), 'render-rust-'));
+  const root = mkdtempSync(path.join(os.tmpdir(), 'render-workflows-rust-'));
   for (const [name, body] of Object.entries(files)) {
     const full = path.join(root, name);
     mkdirSync(path.dirname(full), { recursive: true });

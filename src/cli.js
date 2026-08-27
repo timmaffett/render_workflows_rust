@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// render-rust -- write Render Workflows tasks in Rust.
+// render-workflows-rust -- write Render Workflows tasks in Rust.
 
 const { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, renameSync, writeFileSync } = require('node:fs');
 const { spawn } = require('node:child_process');
@@ -18,9 +18,9 @@ const lint = require('./toolchain/lint');
 
 const { version } = require('../package.json');
 
-const log = (message) => console.log(`[render-rust] ${message}`);
+const log = (message) => console.log(`[render-workflows-rust] ${message}`);
 const fail = (message) => {
-  console.error(`[render-rust] ${message}`);
+  console.error(`[render-workflows-rust] ${message}`);
   process.exit(1);
 };
 
@@ -70,7 +70,7 @@ async function build(root, { force = false, rustVersion } = {}) {
   const errors = problems.filter((p) => !p.warning);
   for (const p of problems) {
     const lead = p.warning ? 'warning' : 'error';
-    console.error(`[render-rust] ${lead}: ${p.what}\n  ${p.why}\n  ${p.fix}\n`);
+    console.error(`[render-workflows-rust] ${lead}: ${p.what}\n  ${p.why}\n  ${p.fix}\n`);
   }
   if (errors.length) fail(`${errors.length} problem(s) must be fixed before building.`);
 
@@ -210,7 +210,7 @@ function init(root, args) {
     // From this package's own version, never a literal. A hardcoded "^0.1.0"
     // in the sibling package meant every scaffold silently installed an old
     // release for three versions, because npm reads ^0.1.0 as <0.2.0.
-    pkg.dependencies = { ...pkg.dependencies, 'render-rust': `^${version}` };
+    pkg.dependencies = { ...pkg.dependencies, 'render-workflows-rust': `^${version}` };
     writeFileSync(pkgFile, `${JSON.stringify(pkg, null, 2)}\n`);
   }
 
@@ -220,8 +220,8 @@ Created ${path.relative(root, target) || name} from the "${template}" template.
 
   cd ${path.relative(root, target) || name}
   npm install
-  npx render-rust build
-  npx render-rust dev
+  npx render-workflows-rust build
+  npx render-workflows-rust dev
 
 Deploy as a workflow service with:
   runtime        node
@@ -277,7 +277,7 @@ async function rustInfo(root, args) {
   console.log(`resolved:  ${resolved.version ?? 'unknown'}  (${resolved.source})`);
   console.log(`default:   ${DEFAULT_RUST_VERSION}`);
   console.log(`target:    ${hostTriple()}`);
-  console.log('\nrender-rust rust --list [--limit N]');
+  console.log('\nrender-workflows-rust rust --list [--limit N]');
 }
 
 async function main() {
@@ -302,15 +302,15 @@ async function main() {
       await rustInfo(root, args);
       break;
     default:
-      console.log(`render-rust ${version} — write Render Workflows tasks in Rust
+      console.log(`render-workflows-rust ${version} — write Render Workflows tasks in Rust
 
 Usage:
-  render-rust build [--force] [--rust-version <v>]
+  render-workflows-rust build [--force] [--rust-version <v>]
                                 Compile the crate to build/tasks.node
-  render-rust dev [-- cmd...]   Build, then run the local task server
-  render-rust init [dir] [--template <name>]
+  render-workflows-rust dev [-- cmd...]   Build, then run the local task server
+  render-workflows-rust init [dir] [--template <name>]
                                 Scaffold a new Rust workflow project
-  render-rust rust [--list] [--limit <n>]
+  render-workflows-rust rust [--list] [--limit <n>]
                                 Which Rust this project uses, or what exists
 
 Rust version, highest precedence first:

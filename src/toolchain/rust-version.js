@@ -11,7 +11,7 @@ const CHANNELS = ['stable', 'beta', 'nightly'];
 
 // An exact version rather than `stable`, so an unpinned build is reproducible
 // and needs no network to work out what it wants. The cost is that this line
-// is bumped by hand; `render-rust rust --list` makes the drift visible.
+// is bumped by hand; `render-workflows-rust rust --list` makes the drift visible.
 const DEFAULT_RUST_VERSION = '1.98.0';
 
 const DIST = 'https://static.rust-lang.org/dist';

@@ -13,10 +13,10 @@ const CLI = path.join(__dirname, '..', 'src', 'cli.js');
 const EXAMPLES = path.join(__dirname, '..', 'examples');
 const { version } = require('../package.json');
 
-const scratch = () => mkdtemp(path.join(os.tmpdir(), 'render-rust-cli-'));
+const scratch = () => mkdtemp(path.join(os.tmpdir(), 'render-workflows-rust-cli-'));
 
 // cli.js calls main() on require, so it has to be driven as a subprocess --
-// which is also the path a real `npx render-rust init` takes.
+// which is also the path a real `npx render-workflows-rust init` takes.
 
 test('init pins the dependency to this package’s own version', async () => {
   const dir = await scratch();
@@ -25,7 +25,7 @@ test('init pins the dependency to this package’s own version', async () => {
   const pkg = JSON.parse(await readFile(path.join(dir, 'proj', 'package.json'), 'utf8'));
   // A hardcoded "^0.1.0" in the sibling package meant every scaffold silently
   // installed 0.1.1 for three releases, because npm reads ^0.1.0 as <0.2.0.
-  assert.strictEqual(pkg.dependencies['render-rust'], `^${version}`);
+  assert.strictEqual(pkg.dependencies['render-workflows-rust'], `^${version}`);
 });
 
 test('init names the project after its directory', async () => {

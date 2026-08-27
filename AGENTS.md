@@ -1,4 +1,4 @@
-# Working on render-rust
+# Working on render-workflows-rust
 
 The npm package that lets Rust tasks run on Render Workflows. Sibling to
 [`render-dart`](https://github.com/timmaffett/render-dart), and a lot of the
@@ -56,7 +56,7 @@ that sidecar the cache key is directory existence, and changing a pin does
 nothing on any machine that has built once — including every Render build after
 the first. That was a real bug in the sibling package.
 
-**`render-rust rust` passes `fetch: false`.** A question must not install
+**`render-workflows-rust rust` passes `fetch: false`.** A question must not install
 365 MB. The sibling shipped that bug; a test holds the line here.
 
 **Both cargo caches must be relocated, and they are not interchangeable.**
@@ -88,14 +88,14 @@ reason a legitimate build fails is worse than one that occasionally misses.
 
 ## Developing an example against the local package
 
-`"render-rust": "file:../.."` alone does not work. npm links it, but **Node
+`"render-workflows-rust": "file:../.."` alone does not work. npm links it, but **Node
 resolves a symlinked package from its realpath**, so `require('@renderinc/sdk')`
 inside `runtime.js` is searched from the package root rather than from the
 example — and fails with `Cannot find module '@renderinc/sdk/workflows'`.
 
 The SDK is therefore a devDependency here, so `npm install` at the repo root
 makes it resolvable from both places. The published examples declare
-`render-rust: ^<version>` like any user's project would; `init` overwrites that
+`render-workflows-rust: ^<version>` like any user's project would; `init` overwrites that
 line regardless.
 
 ## Changing the Rust side
@@ -114,7 +114,7 @@ for reasons unrelated to the code.
   every branch of `resolveCargo` without 365 MB.
 - Build fixture crates in `mkdtemp` directories.
 - Drive the CLI as a subprocess — `cli.js` calls `main()` on require, and it is
-  also the real `npx render-rust init` path.
+  also the real `npx render-workflows-rust init` path.
 - Assert the `--help` text against the implementation's precedence order. In the
   sibling package a stray backtick in that template literal turned every command
   into a `SyntaxError` while all 67 tests still passed, because every test

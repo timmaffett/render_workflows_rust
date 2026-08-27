@@ -1,4 +1,4 @@
-# render-rust
+# render-workflows-rust
 
 Write [Render Workflows](https://render.com/docs/workflows) tasks in Rust.
 
@@ -12,8 +12,8 @@ pub fn sum_squares(numbers: Vec<i64>) -> i64 {
 ```
 
 ```bash
-npx render-rust init my-tasks
-cd my-tasks && npm install && npx render-rust build
+npx render-workflows-rust init my-tasks
+cd my-tasks && npm install && npx render-workflows-rust build
 render workflows start my-tasks/sumSquares --input='[[2, 3, 4]]' --local
 ```
 
@@ -48,7 +48,7 @@ status   failed
 error    deliberate panic from Rust
 ```
 
-`render-rust build` warns about every bare `#[napi]` it finds, and refuses to
+`render-workflows-rust build` warns about every bare `#[napi]` it finds, and refuses to
 build on the two related traps: a `Cargo.toml` without `crate-type = ["cdylib"]`
 (cargo would emit an rlib, which Node cannot load), and `panic = "abort"` in the
 active profile (which silently defeats `catch_unwind`).
@@ -65,7 +65,7 @@ are JSON, capped by Render at 4 MB per invocation.
 `index.js` is the whole entrypoint:
 
 ```js
-require('render-rust/runtime').runTasks('./build/tasks.node');
+require('render-workflows-rust/runtime').runTasks('./build/tasks.node');
 ```
 
 Per-task options go in `package.json`, which is the one unsatisfying part of
@@ -80,13 +80,23 @@ this release — the settings live apart from the function they describe:
 
 ## Commands
 
+The package installs two commands: `render-workflows-rust`, and `render-rust` as
+a shorter alias for the one you type most. Only the full name works with
+`npx` before the package is installed, since npx resolves a *package* name:
+
+```bash
+npx render-workflows-rust init my-tasks    # fetches the package
+npx render-rust build                      # inside a project, once installed
+```
+
+
 | | |
 | --- | --- |
-| `render-rust build` | Compile the crate to `build/tasks.node`, skipping if unchanged |
-| `render-rust dev` | Build, then start Render's local task server |
-| `render-rust init [dir] [--template <name>]` | Scaffold from an example |
-| `render-rust rust` | Which Rust this project uses, and why |
-| `render-rust rust --list` | What the archive offers |
+| `render-workflows-rust build` | Compile the crate to `build/tasks.node`, skipping if unchanged |
+| `render-workflows-rust dev` | Build, then start Render's local task server |
+| `render-workflows-rust init [dir] [--template <name>]` | Scaffold from an example |
+| `render-workflows-rust rust` | Which Rust this project uses, and why |
+| `render-workflows-rust rust --list` | What the archive offers |
 
 Configure through `renderRust` in `package.json`:
 
@@ -111,8 +121,8 @@ varying a build without a commit, and `package.json` for the answer that should
 travel with the project:
 
 ```bash
-npx render-rust build --rust-version 1.97.0
-RENDER_RUST_VERSION=1.97.0 npx render-rust build
+npx render-workflows-rust build --rust-version 1.97.0
+RENDER_RUST_VERSION=1.97.0 npx render-workflows-rust build
 ```
 
 ```json

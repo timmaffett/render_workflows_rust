@@ -1,14 +1,14 @@
 {
-  "name": "render-rust-example-threads",
+  "name": "render-workflows-rust-example-threads",
   "private": true,
   "scripts": {
-    "build": "render-rust build",
+    "build": "render-workflows-rust build",
     "start": "node index.js",
-    "dev": "render-rust dev"
+    "dev": "render-workflows-rust dev"
   },
   "dependencies": {
     "@renderinc/sdk": "^0.6.0",
-    "render-rust": "^0.1.0"
+    "render-workflows-rust": "^0.1.0"
   },
   "renderRust": {
     "crate": ".",

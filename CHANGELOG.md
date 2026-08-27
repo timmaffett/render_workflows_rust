@@ -11,7 +11,7 @@ Render runtime everywhere else, and absent here. But `buildCommand` and
 toolchain, compile a cdylib with NAPI-RS, and register its exports with Render's
 own SDK.
 
-- **`render-rust build`** vendors a Rust toolchain into `node_modules`, verified
+- **`render-workflows-rust build`** vendors a Rust toolchain into `node_modules`, verified
   against the published SHA-256 while it streams to disk, and compiles the crate
   to `build/tasks.node`.
 - **Version pinning** — `--rust-version`, `RENDER_RUST_VERSION`, or
@@ -22,7 +22,7 @@ own SDK.
 - **Three build-time checks** for mistakes that compile cleanly and then
   misbehave: a missing `crate-type = ["cdylib"]`, `panic = "abort"` defeating
   `catch_unwind`, and a bare `#[napi]` whose panic would abort the process.
-- **`render-rust init`** scaffolds from the examples, which are also the
+- **`render-workflows-rust init`** scaffolds from the examples, which are also the
   deployed services.
 - 36 tests, all offline.
 

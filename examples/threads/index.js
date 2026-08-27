@@ -1,1 +1,1 @@
-require('render-rust/runtime').runTasks('./build/tasks.node');
+require('render-workflows-rust/runtime').runTasks('./build/tasks.node');

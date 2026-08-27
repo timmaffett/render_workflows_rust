@@ -4,8 +4,8 @@ The smallest useful Rust workflow: four tasks, no dependencies beyond `napi`.
 
 ```bash
 npm install
-npx render-rust build
-npx render-rust dev
+npx render-workflows-rust build
+npx render-workflows-rust dev
 ```
 
 Then, from another shell:

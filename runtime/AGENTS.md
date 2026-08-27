@@ -1,17 +1,17 @@
 # Working in this project
 
-Rust tasks running on Render Workflows, via `render-rust`. The Rust compiles to
+Rust tasks running on Render Workflows, via `render-workflows-rust`. The Rust compiles to
 a native Node addon (`.node`) that a small JavaScript entrypoint loads and
 registers with Render's own SDK.
 
-`render-rust` is an unofficial community package, not affiliated with Render.
+`render-workflows-rust` is an unofficial community package, not affiliated with Render.
 
 ## Commands
 
 ```bash
-npx render-rust build         # compile; --force skips the freshness check
-npx render-rust dev           # build, then start Render's local task server
-npx render-rust rust          # which Rust this project uses, and why
+npx render-workflows-rust build         # compile; --force skips the freshness check
+npx render-workflows-rust dev           # build, then start Render's local task server
+npx render-workflows-rust rust          # which Rust this project uses, and why
 render workflows tasks list --local
 render workflows start <task> --local --input='[1, 2]'
 ```
@@ -104,4 +104,4 @@ application, and a reproducible deploy wants a pinned dependency graph.
 
 ## More
 
-Runnable examples: <https://github.com/timmaffett/render_rust_workflows/tree/main/examples>
+Runnable examples: <https://github.com/timmaffett/render_workflows_rust/tree/main/examples>

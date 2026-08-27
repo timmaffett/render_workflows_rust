@@ -32,7 +32,7 @@ function fakeToolchain(root, version) {
   return cargo;
 }
 
-const project = () => mkdtempSync(path.join(os.tmpdir(), 'render-rust-'));
+const project = () => mkdtempSync(path.join(os.tmpdir(), 'render-workflows-rust-'));
 
 test('everything cacheable lives under node_modules', () => {
   // Render's build cache preserves node_modules and nothing else. Measured on

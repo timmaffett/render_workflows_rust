@@ -80,13 +80,15 @@ this release — the settings live apart from the function they describe:
 
 ## Commands
 
-The package installs two commands: `render-workflows-rust`, and `render-rust` as
-a shorter alias for the one you type most. Only the full name works with
-`npx` before the package is installed, since npx resolves a *package* name:
+The package installs two commands. `render-workflows-rust` is the name used
+throughout these docs; `render-rust` is a shorter alias for the same thing, for
+when you are typing it often.
+
+`npx` resolves a *package* name, so first contact needs the full one:
 
 ```bash
-npx render-workflows-rust init my-tasks    # fetches the package
-npx render-rust build                      # inside a project, once installed
+npx render-workflows-rust init my-tasks   # fetches the package
+npx render-rust build                     # inside a project, once installed
 ```
 
 

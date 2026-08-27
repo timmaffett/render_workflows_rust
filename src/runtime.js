@@ -85,13 +85,13 @@ function runTasks(addonPath = './build/tasks.node', options = {}) {
     );
   }
 
-  console.log(`[render-rust] registered ${names.length} task(s): ${names.join(', ')}`);
+  console.log(`[render-workflows-rust] registered ${names.length} task(s): ${names.join(', ')}`);
 
   // The SDK reports a task failure over /callback and *then* rethrows it. Left
   // alone that surfaces as an unhandled rejection, which on Render means the
   // instance dies with a stack trace instead of the run failing cleanly.
   startTaskServer().catch((e) => {
-    console.error(`[render-rust] task failed: ${e && e.message ? e.message : e}`);
+    console.error(`[render-workflows-rust] task failed: ${e && e.message ? e.message : e}`);
     process.exit(1);
   });
 

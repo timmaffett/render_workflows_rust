@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.1
+
+Documentation only, and a release because npm serves a README from the archive:
+0.1.0's registry page still showed `render-rust` as the command.
+
+Docs, example scripts and log lines all say `render-workflows-rust` now.
+`render-rust` remains a second bin, documented as an alias for when you are
+typing it often.
+
 ## 0.1.0
 
 First release. Rust tasks on Render Workflows, through a native Node addon.

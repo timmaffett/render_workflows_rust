@@ -11,7 +11,8 @@ Security and packaging fixes from an audit of this package.
   usual exclusion of `node_modules` does not reach inside an allowlisted path.
   Fixed twice over: an `examples/.npmignore` (which the Dart sibling has always
   had, and which this package was created without), and a `prepack` guard that
-  refuses to pack when any build artifact is present. **Prefer 0.1.2 to 0.1.1.**
+  asks npm what it *would* pack and refuses if build output is in that list.
+  **Prefer 0.1.2 to 0.1.1.**
 - **An unverified toolchain download is refused rather than logged.** If the
   published `.sha256` could not be fetched, the archive was unpacked and its
   `install.sh` executed anyway, with a note in the log. A request that 404s is

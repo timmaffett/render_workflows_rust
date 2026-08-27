@@ -1,7 +1,7 @@
 # Working on render-workflows-rust
 
 The npm package that lets Rust tasks run on Render Workflows. Sibling to
-[`render-dart`](https://github.com/timmaffett/render-dart), and a lot of the
+[`render-dart`](https://github.com/timmaffett/render_workflows_dart), and a lot of the
 design is carried over from it deliberately — where a comment here says "the
 sibling package", that is a bug someone already paid for.
 
